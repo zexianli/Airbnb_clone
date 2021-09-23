@@ -7,3 +7,15 @@
         transition duration-100 ease-out
     }
 }
+
+.rdrDefinedRangesWrapper {
+    display: none;
+}
+
+.rdrMonthPicker {
+    display: none;
+}
+
+.rdrYearPicker {
+    display: none;
+}

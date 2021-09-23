@@ -92,6 +92,10 @@ function Header({placeHolder}) {
                         minDate={new Date()}
                         rangeColors={["#FD5B61"]}
                         onChange={handleSelect}
+                        staticRanges={[]}
+                        inputRanges={[]}
+                        months={2}
+                        direction="horizontal"
                     />
 
                     <div className="flex items-center border-b mb-4">
