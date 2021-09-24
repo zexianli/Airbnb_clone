@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { DateRangePicker } from 'react-date-range';
 import { useRouter } from "next/dist/client/router";
+import { useEffect } from 'react'
 
 
 function Header({placeHolder}) {
@@ -16,6 +17,7 @@ function Header({placeHolder}) {
     const [startDate, setStartDate] = useState(new Date);
     const [endDate, setEndDate] = useState(new Date);
     const [noOfGuests, setNoOfGuests] = useState(1);
+    const [isVisible, setIsVisible] = useState(true);
     const router = useRouter();
 
     const handleSelect = (ranges) => {
@@ -85,7 +87,7 @@ function Header({placeHolder}) {
                 </div>
             </div>
 
-            {searchInput && (
+            {searchInput && isVisible && (
                 <div className="flex flex-col col-span-3 mx-auto mt-3">
                     <DateRangePicker 
                         ranges={[selectionRange]}
