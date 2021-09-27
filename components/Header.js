@@ -6,10 +6,11 @@ import {
     UserCircleIcon,
     UsersIcon
 } from '@heroicons/react/solid';
-import { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { DateRangePicker } from 'react-date-range';
 import { useRouter } from "next/dist/client/router";
-import { useEffect } from 'react'
+import { Menu, Transition } from "@headlessui/react";
+
 
 
 function Header({placeHolder}) {
@@ -17,6 +18,7 @@ function Header({placeHolder}) {
     const [startDate, setStartDate] = useState(new Date);
     const [endDate, setEndDate] = useState(new Date);
     const [noOfGuests, setNoOfGuests] = useState(1);
+    const [dropDownVisible, setDropDownVisible] = useState(false);
     const router = useRouter();
 
     const handleSelect = (ranges) => {
@@ -50,7 +52,7 @@ function Header({placeHolder}) {
     return (
         <header className="sticky top-0 z-50 
             grid grid-cols-3 bg-white shadow-md 
-            p-5 md:px-10">
+            p-5 md:px-10 lg:px-24 xl:px-96">
             {/* Left */}
             <div onClick={() => router.push("/")} className="relative flex items-center h-10 cursor-pointer my-auto">
                 <Image
@@ -76,14 +78,98 @@ function Header({placeHolder}) {
             </div>
 
             {/* Right */}
-            <div className="flex items-center space-x-4 justify-end text-gray-500">
+            <div className="flex items-center space-x-4 justify-end text-gray-500 hover:cursor-pointer">
                 <p className="hidden md:inline cursor-pointer">Become a host</p>
                 <GlobeAltIcon className="h-6 cursor-pointer"/>
 
-                <div className="flex items-center space-x-2 border-2 p-2 rounded-full">
-                    <MenuIcon className="h-6 cursor-pointer"/>
-                    <UserCircleIcon className="h-6 cursor-pointer"/>
-                </div>
+                <Menu as="div" className="relative inline-block text-left">
+                    <div>
+                        <Menu.Button className="relative flex items-center space-x-2 border-2 p-2 rounded-full">
+                            <MenuIcon className="h-6 cursor-pointer"/>
+                            <UserCircleIcon className="h-6 cursor-pointer"/>
+                        </Menu.Button>
+                    </div>
+
+                    <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-50"
+                        enterFrom="transform opacity-0 scale-100"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-25"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-100"
+                    >
+
+                        <Menu.Items 
+                            className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg text-black
+                            bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+                            <div className="py-1">
+                                <Menu.Item>
+                                    {({ active }) => (
+                                        <a 
+                                            href=""
+                                            className={`${
+                                                active ? "bg-gray-200" : ""
+                                                } block px-4 py-2 text-m font-semibold`}
+                                        >
+                                            Log in
+                                        </a>
+                                    )}
+                                </Menu.Item>
+                                <Menu.Item>
+                                    {({ active }) => (
+                                        <a 
+                                            href=""
+                                            className={`${
+                                                active ? "bg-gray-200" : ""
+                                                } block px-4 py-2 text-m`}
+                                        >
+                                            Sign up
+                                        </a>
+                                    )}
+                                </Menu.Item>
+                            </div>
+                            <div className="py-1">
+                                <Menu.Item>
+                                    {({ active }) => (
+                                        <a 
+                                            href=""
+                                            className={`${
+                                                active ? "bg-gray-200" : ""
+                                                } block px-4 py-2 text-m`}
+                                        >
+                                            Host your home
+                                        </a>
+                                    )}
+                                </Menu.Item>
+                                <Menu.Item>
+                                    {({ active }) => (
+                                        <a 
+                                            href=""
+                                            className={`${
+                                                active ? "bg-gray-200" : ""
+                                                } block px-4 py-2 text-m`}
+                                        >
+                                            Host an experience
+                                        </a>
+                                    )}
+                                </Menu.Item>
+                                <Menu.Item>
+                                    {({ active }) => (
+                                        <a 
+                                            href=""
+                                            className={`${
+                                                active ? "bg-gray-200" : ""
+                                                } block px-4 py-2 text-sm`}
+                                        >
+                                            Help
+                                        </a>
+                                    )}
+                                </Menu.Item>
+                            </div>
+                        </Menu.Items>
+                    </Transition>
+                </Menu>
             </div>
 
             {searchInput && (
@@ -126,6 +212,7 @@ function Header({placeHolder}) {
                     </div>
                 </div>
             )}
+
         </header>
     )
 }
