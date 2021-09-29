@@ -6,19 +6,28 @@ import {
     UserCircleIcon,
     UsersIcon
 } from '@heroicons/react/solid';
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { DateRangePicker } from 'react-date-range';
 import { useRouter } from "next/dist/client/router";
-import { Menu, Transition } from "@headlessui/react";
+import { Dialog, Menu, Transition } from "@headlessui/react";
 
-
+const modalStyle = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
 
 function Header({placeHolder}) {
     const [searchInput, setSearchInput] = useState("");
     const [startDate, setStartDate] = useState(new Date);
     const [endDate, setEndDate] = useState(new Date);
     const [noOfGuests, setNoOfGuests] = useState(1);
-    const [dropDownVisible, setDropDownVisible] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const router = useRouter();
 
     const handleSelect = (ranges) => {
@@ -48,6 +57,19 @@ function Header({placeHolder}) {
         });
         setSearchInput("");
     }
+
+    // useEffect(() => {
+    //     if (isModalOpen) {
+    //         console.log("Opened modal");
+    //         document.body.style.overflow = 'hidden';
+    //     }
+    //     return () => {
+    //         if (isModalOpen) {
+    //             console.log("Closed modal");
+    //             document.body.style.overflow = 'unset';    
+    //         }
+    //     }
+    // }, [isModalOpen])
 
     return (
         <header className="sticky top-0 z-50 
@@ -106,14 +128,14 @@ function Header({placeHolder}) {
                             <div className="py-1">
                                 <Menu.Item>
                                     {({ active }) => (
-                                        <a 
-                                            href=""
+                                        <p 
                                             className={`${
                                                 active ? "bg-gray-200" : ""
                                                 } block px-4 py-2 text-m font-semibold`}
+                                            onClick={() => {setIsModalOpen(!isModalOpen); console.log("Log in clicked")}}
                                         >
                                             Log in
-                                        </a>
+                                        </p>
                                     )}
                                 </Menu.Item>
                                 <Menu.Item>
@@ -213,6 +235,52 @@ function Header({placeHolder}) {
                 </div>
             )}
 
+            <Dialog
+                as="div"
+                className="fixed inset-0 z-10 overflow-y-auto"
+                open={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            >
+                <div className="min-h-screen px-4 text-center">
+                    <Dialog.Overlay className="fixed inset-0 bg-white opacity-50" />
+
+                    {/* This element is to trick the browser into centering the modal contents. */}
+                    <span
+                        className="inline-block h-screen align-middle"
+                        aria-hidden="true"
+                    >
+                        &#8203;
+                    </span>
+                    
+                    <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                        
+                        <Dialog.Title
+                            as="h3"
+                            className="text-lg font-medium leading-6 text-gray-900"
+                        >
+                            Payment successful
+                        </Dialog.Title>
+
+                        <div className="mt-2">
+                            <p className="text-sm text-gray-500">
+                                Your payment has been successfully submitted. We’ve sent you
+                                an email with all of the details of your order.
+                            </p>
+                        </div>
+
+                        <div className="mt-4">
+                            <button
+                                type="button"
+                                className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                                onClick={() => setIsModalOpen(false)}
+                            >
+                                Got it, thanks!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </Dialog>
+            
         </header>
     )
 }
