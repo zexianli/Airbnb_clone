@@ -2,12 +2,26 @@
 @import url("react-date-range/dist/theme/default.css");
 
 @tailwind components;
+@tailwind utilities;
 
 @layer components {
     .button {
         @apply px-4 py-2 border rounded-full 
         cursor-pointer hover:shadow-lg active:scale-95 active:bg-gray-100
         transition duration-100 ease-out
+    }
+}
+
+@layer utilities {
+    .horizontal-line-parent {
+        width: 100%; 
+        text-align: center; 
+        line-height: 0.2em;
+        margin: 10px 0 40px; 
+    }
+
+    .continue-btn-bg {
+        background-color: #dd115c;
     }
 }
 
@@ -22,3 +36,5 @@
 .rdrYearPicker {
     display: none;
 }
+
+

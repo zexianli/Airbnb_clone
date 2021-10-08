@@ -4,23 +4,15 @@ import {
     GlobeAltIcon,
     MenuIcon,
     UserCircleIcon,
-    UsersIcon
+    UsersIcon,
+    XIcon
 } from '@heroicons/react/solid';
-import React, { useState, Fragment, useEffect } from "react";
+import React, { useState, Fragment } from "react";
+import { useForm } from "react-hook-form";
 import { DateRangePicker } from 'react-date-range';
 import { useRouter } from "next/dist/client/router";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 
-const modalStyle = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-    },
-  };
 
 function Header({placeHolder}) {
     const [searchInput, setSearchInput] = useState("");
@@ -28,6 +20,7 @@ function Header({placeHolder}) {
     const [endDate, setEndDate] = useState(new Date);
     const [noOfGuests, setNoOfGuests] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const router = useRouter();
 
     const handleSelect = (ranges) => {
@@ -58,18 +51,9 @@ function Header({placeHolder}) {
         setSearchInput("");
     }
 
-    // useEffect(() => {
-    //     if (isModalOpen) {
-    //         console.log("Opened modal");
-    //         document.body.style.overflow = 'hidden';
-    //     }
-    //     return () => {
-    //         if (isModalOpen) {
-    //             console.log("Closed modal");
-    //             document.body.style.overflow = 'unset';    
-    //         }
-    //     }
-    // }, [isModalOpen])
+    const onSubmit = (data) => {
+        console.log(data);
+    }
 
     return (
         <header className="sticky top-0 z-50 
@@ -134,7 +118,7 @@ function Header({placeHolder}) {
                                                 } block px-4 py-2 text-m font-semibold`}
                                             onClick={() => {setIsModalOpen(!isModalOpen); console.log("Log in clicked")}}
                                         >
-                                            Log in
+                                            Sign up
                                         </p>
                                     )}
                                 </Menu.Item>
@@ -146,7 +130,7 @@ function Header({placeHolder}) {
                                                 active ? "bg-gray-200" : ""
                                                 } block px-4 py-2 text-m`}
                                         >
-                                            Sign up
+                                            Log in
                                         </a>
                                     )}
                                 </Menu.Item>
@@ -242,7 +226,7 @@ function Header({placeHolder}) {
                 onClose={() => setIsModalOpen(false)}
             >
                 <div className="min-h-screen px-4 text-center">
-                    <Dialog.Overlay className="fixed inset-0 bg-white opacity-50" />
+                    <Dialog.Overlay className="fixed inset-0 bg-black opacity-50" />
 
                     {/* This element is to trick the browser into centering the modal contents. */}
                     <span
@@ -252,30 +236,65 @@ function Header({placeHolder}) {
                         &#8203;
                     </span>
                     
-                    <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                    <div className="inline-block w-full max-w-md my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                         
-                        <Dialog.Title
-                            as="h3"
-                            className="text-lg font-medium leading-6 text-gray-900"
-                        >
-                            Payment successful
-                        </Dialog.Title>
-
-                        <div className="mt-2">
-                            <p className="text-sm text-gray-500">
-                                Your payment has been successfully submitted. We’ve sent you
-                                an email with all of the details of your order.
-                            </p>
+                        <div className="text-lg font-medium leading-6 text-gray-900 text-center px-6 py-4 align-middle">
+                            <XIcon 
+                                className="absolute h-6 w-6 m-1 p-1 hover:bg-gray-200 hover:rounded-full hover:cursor-pointer" 
+                                onClick={() => setIsModalOpen(false)}
+                            />
+                            <Dialog.Title
+                                as="h3"
+                                className=""
+                            >
+                                Log in or sign up
+                            </Dialog.Title>
                         </div>
 
-                        <div className="mt-4">
-                            <button
-                                type="button"
-                                className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                                onClick={() => setIsModalOpen(false)}
+                        {/* Email and other login methods goes inside this div */}
+                        <div className="pt-1 p-6 border-t">
+                            <div className="text-lg font-semibold mt-5 mb-4">
+                                Welcome to Airbnb
+                            </div>
+
+                            <form 
+                                className="w-full bg-white"
+                                onSubmit={handleSubmit(onSubmit)}
                             >
-                                Got it, thanks!
-                            </button>
+                                <input
+                                    className={`w-full border rounded-md p-3 pl-2 
+                                        ${errors.email ? "outline-none border-red-500 bg-red-50 focus:bg-white focus:border-2" : ""}`}
+                                    type="text" 
+                                    placeholder="Email"
+                                    {...register("email", { 
+                                        required: true, 
+                                        pattern: {
+                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
+                                        }
+                                    })}
+                                />
+                                <button className="w-full continue-btn-bg opacity-90 text-white font-semibold rounded-md my-4 py-3">
+                                    Continue
+                                </button>
+                            </form>
+
+                            <div className="horizontal-line-parent border-b">
+                                <span className="bg-white px-6 text-gray-500">or</span>
+                            </div>
+
+                            <div className="">
+                                <div>continue with google</div>
+                            </div>
+
+                            <div className="mt-4">
+                                <button
+                                    type="button"
+                                    className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                                    onClick={() => setIsModalOpen(false)}
+                                >
+                                    Got it, thanks!
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
