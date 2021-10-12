@@ -1,44 +1,47 @@
 import Image from "next/image";
-import { 
+import {
     SearchIcon,
     GlobeAltIcon,
     MenuIcon,
     UserCircleIcon,
     UsersIcon,
-    XIcon
-} from '@heroicons/react/solid';
+    XIcon,
+} from "@heroicons/react/solid";
 import React, { useState, Fragment } from "react";
 import { useForm } from "react-hook-form";
-import { DateRangePicker } from 'react-date-range';
+import { DateRangePicker } from "react-date-range";
 import { useRouter } from "next/dist/client/router";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import { singIn, signOut, useSession, signIn } from "next-auth/client";
 
-
-function Header({placeHolder}) {
+function Header({ placeHolder }) {
     const [searchInput, setSearchInput] = useState("");
-    const [startDate, setStartDate] = useState(new Date);
-    const [endDate, setEndDate] = useState(new Date);
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
     const [noOfGuests, setNoOfGuests] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
     const router = useRouter();
     const [session, loading] = useSession();
 
     const handleSelect = (ranges) => {
         setStartDate(ranges.selection.startDate);
         setEndDate(ranges.selection.endDate);
-    }
+    };
 
     const selectionRange = {
         startDate: startDate,
         endDate: endDate,
-        key: "selection"
-    }
+        key: "selection",
+    };
 
     const resetInput = () => {
         setSearchInput("");
-    }
+    };
 
     const search = () => {
         router.push({
@@ -51,18 +54,23 @@ function Header({placeHolder}) {
             },
         });
         setSearchInput("");
-    }
+    };
 
     const onSubmit = (data) => {
         console.log(data);
-    }
+    };
 
     return (
-        <header className="sticky top-0 z-50 
+        <header
+            className="sticky top-0 z-50 
             grid grid-cols-3 bg-white shadow-md 
-            p-5 md:px-10 lg:px-24 xl:px-96">
+            p-5 md:px-10 lg:px-24 xl:px-96"
+        >
             {/* Left */}
-            <div onClick={() => router.push("/")} className="relative flex items-center h-10 cursor-pointer my-auto">
+            <div
+                onClick={() => router.push("/")}
+                className="relative flex items-center h-10 cursor-pointer my-auto"
+            >
                 <Image
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_Logo_B%C3%A9lo.svg/2560px-Airbnb_Logo_B%C3%A9lo.svg.png"
                     layout="fill"
@@ -76,24 +84,26 @@ function Header({placeHolder}) {
                 <input
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
-                    className="pl-5 bg-transparent outline-none flex-grow text-sm text-gray-600 placeholder-gray-400" 
-                    type="text" 
+                    className="pl-5 bg-transparent outline-none flex-grow text-sm text-gray-600 placeholder-gray-400"
+                    type="text"
                     placeholder={placeHolder || "Start your search"}
                 />
-                
-                <SearchIcon className="hidden md:inline-flex h-8 
-                bg-red-400 text-white rounded-full p-2 cursor-pointer md:mx-2"/>
+
+                <SearchIcon
+                    className="hidden md:inline-flex h-8 
+                bg-red-400 text-white rounded-full p-2 cursor-pointer md:mx-2"
+                />
             </div>
 
             {/* Right */}
             <div className="flex items-center space-x-4 justify-end text-gray-500 hover:cursor-pointer">
                 <p className="hidden md:inline cursor-pointer">Become a host</p>
-                <GlobeAltIcon className="h-6 cursor-pointer"/>
+                <GlobeAltIcon className="h-6 cursor-pointer" />
 
                 <Menu as="div" className="relative inline-block text-left">
                     <div>
                         <Menu.Button className="relative flex items-center space-x-2 border-2 p-2 rounded-full">
-                            <MenuIcon className="h-6 cursor-pointer"/>
+                            <MenuIcon className="h-6 cursor-pointer" />
                             {session ? (
                                 <div className="h-6 ml-2">
                                     <Image
@@ -104,7 +114,7 @@ function Header({placeHolder}) {
                                     />
                                 </div>
                             ) : (
-                                <UserCircleIcon className="h-6 cursor-pointer"/>
+                                <UserCircleIcon className="h-6 cursor-pointer" />
                             )}
                         </Menu.Button>
                     </div>
@@ -118,18 +128,21 @@ function Header({placeHolder}) {
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-100"
                     >
-
-                        <Menu.Items 
+                        <Menu.Items
                             className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg text-black
-                            bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+                            bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none"
+                        >
                             <div className="py-1">
                                 <Menu.Item>
                                     {({ active }) => (
-                                        <p 
+                                        <p
                                             className={`
                                                 ${active ? "bg-gray-200" : ""} 
                                                 menu-item font-semibold`}
-                                            onClick={() => {setIsModalOpen(!isModalOpen); console.log("Log in clicked")}}
+                                            onClick={() => {
+                                                setIsModalOpen(!isModalOpen);
+                                                console.log("Log in clicked");
+                                            }}
                                         >
                                             Sign up
                                         </p>
@@ -137,7 +150,7 @@ function Header({placeHolder}) {
                                 </Menu.Item>
                                 <Menu.Item>
                                     {({ active }) => (
-                                        <a 
+                                        <a
                                             href=""
                                             className={`
                                                 ${active ? "bg-gray-200" : ""} 
@@ -151,7 +164,7 @@ function Header({placeHolder}) {
                             <div className="py-1">
                                 <Menu.Item>
                                     {({ active }) => (
-                                        <a 
+                                        <a
                                             href=""
                                             className={`
                                                 ${active ? "bg-gray-200" : ""} 
@@ -163,7 +176,7 @@ function Header({placeHolder}) {
                                 </Menu.Item>
                                 <Menu.Item>
                                     {({ active }) => (
-                                        <a 
+                                        <a
                                             href=""
                                             className={`
                                                 ${active ? "bg-gray-200" : ""} 
@@ -175,7 +188,7 @@ function Header({placeHolder}) {
                                 </Menu.Item>
                                 <Menu.Item>
                                     {({ active }) => (
-                                        <a 
+                                        <a
                                             href=""
                                             className={`
                                                 ${session ? "hidden" : ""}
@@ -190,7 +203,7 @@ function Header({placeHolder}) {
                             <div className={`${session ? "py-1" : "hidden"}`}>
                                 <Menu.Item>
                                     {({ active }) => (
-                                        <a 
+                                        <a
                                             href=""
                                             className={`
                                                 ${active ? "bg-gray-200" : ""} 
@@ -222,7 +235,7 @@ function Header({placeHolder}) {
 
             {searchInput && (
                 <div className="flex flex-col col-span-3 mx-auto mt-3">
-                    <DateRangePicker 
+                    <DateRangePicker
                         ranges={[selectionRange]}
                         minDate={new Date()}
                         rangeColors={["#FD5B61"]}
@@ -237,24 +250,30 @@ function Header({placeHolder}) {
                         <h2 className="text-2xl flex-grow font-semibold">
                             Number of Guests
                         </h2>
-                        
+
                         <UsersIcon className="h-5" />
-                        
+
                         <input
                             value={noOfGuests}
                             onChange={(e) => setNoOfGuests(e.target.value)}
                             type="number"
                             min={1}
-                            className="w-12 pl-2 text-lg outline-none text-red-400" 
+                            className="w-12 pl-2 text-lg outline-none text-red-400"
                         />
                     </div>
-                    
+
                     <div className="flex">
-                        <button onClick={resetInput} className="flex-grow text-gray-500">
+                        <button
+                            onClick={resetInput}
+                            className="flex-grow text-gray-500"
+                        >
                             Cancel
                         </button>
-                        
-                        <button onClick={search} className="flex-grow text-red-400">
+
+                        <button
+                            onClick={search}
+                            className="flex-grow text-red-400"
+                        >
                             Search
                         </button>
                     </div>
@@ -277,18 +296,14 @@ function Header({placeHolder}) {
                     >
                         &#8203;
                     </span>
-                    
+
                     <div className="inline-block w-full max-w-md my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                        
                         <div className="text-lg font-medium leading-6 text-gray-900 text-center px-6 py-4 align-middle">
-                            <XIcon 
-                                className="absolute h-6 w-6 m-1 p-1 hover:bg-gray-200 hover:rounded-full hover:cursor-pointer" 
+                            <XIcon
+                                className="absolute h-6 w-6 m-1 p-1 hover:bg-gray-200 hover:rounded-full hover:cursor-pointer"
                                 onClick={() => setIsModalOpen(false)}
                             />
-                            <Dialog.Title
-                                as="h3"
-                                className=""
-                            >
+                            <Dialog.Title as="h3" className="">
                                 Log in or sign up
                             </Dialog.Title>
                         </div>
@@ -299,20 +314,24 @@ function Header({placeHolder}) {
                                 Welcome to Airbnb
                             </div>
 
-                            <form 
+                            <form
                                 className="w-full bg-white"
                                 onSubmit={handleSubmit(onSubmit)}
                             >
                                 <input
                                     className={`w-full border rounded-lg p-3 pl-2 
-                                        ${errors.email ? "outline-none border-red-500 bg-red-50 focus:bg-white focus:border-2" : ""}`}
-                                    type="text" 
+                                        ${
+                                            errors.email
+                                                ? "outline-none border-red-500 bg-red-50 focus:bg-white focus:border-2"
+                                                : ""
+                                        }`}
+                                    type="text"
                                     placeholder="Email"
-                                    {...register("email", { 
-                                        required: true, 
+                                    {...register("email", {
+                                        required: true,
                                         pattern: {
-                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-                                        }
+                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        },
                                     })}
                                 />
                                 <button className="w-full continue-btn-bg opacity-90 text-white font-semibold rounded-md my-4 py-3">
@@ -326,28 +345,28 @@ function Header({placeHolder}) {
                                 </span>
                             </div>
 
-
-                            <button className="w-full border-2 rounded-lg hover:border-black">
+                            <button
+                                onClick={() => signIn("google")}
+                                className="w-full border-2 rounded-lg hover:border-black"
+                            >
                                 <div className="flex w-full p-3 pl-2">
-                                    <Image 
-                                        src="/google.svg" 
+                                    <Image
+                                        src="/google.svg"
                                         width={24}
                                         height={24}
-                                        className="flex-initial"                                
-                                        />
+                                        className="flex-initial"
+                                    />
                                     <p className="flex-1 text-center font-medium text-gray-600">
                                         Continue with Google
                                     </p>
                                 </div>
                             </button>
-
                         </div>
                     </div>
                 </div>
             </Dialog>
-            
         </header>
-    )
+    );
 }
 
-export default Header
+export default Header;
