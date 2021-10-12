@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { DateRangePicker } from 'react-date-range';
 import { useRouter } from "next/dist/client/router";
 import { Dialog, Menu, Transition } from "@headlessui/react";
+import { singIn, signOut, useSession, signIn } from "next-auth/client";
 
 
 function Header({placeHolder}) {
@@ -22,6 +23,7 @@ function Header({placeHolder}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm();
     const router = useRouter();
+    const [session, loading] = useSession();
 
     const handleSelect = (ranges) => {
         setStartDate(ranges.selection.startDate);
@@ -92,7 +94,18 @@ function Header({placeHolder}) {
                     <div>
                         <Menu.Button className="relative flex items-center space-x-2 border-2 p-2 rounded-full">
                             <MenuIcon className="h-6 cursor-pointer"/>
-                            <UserCircleIcon className="h-6 cursor-pointer"/>
+                            {session ? (
+                                <div className="h-6 ml-2">
+                                    <Image
+                                        src={session.user.image}
+                                        height={24}
+                                        width={24}
+                                        className="rounded-full"
+                                    />
+                                </div>
+                            ) : (
+                                <UserCircleIcon className="h-6 cursor-pointer"/>
+                            )}
                         </Menu.Button>
                     </div>
 
@@ -113,9 +126,9 @@ function Header({placeHolder}) {
                                 <Menu.Item>
                                     {({ active }) => (
                                         <p 
-                                            className={`${
-                                                active ? "bg-gray-200" : ""
-                                                } block px-4 py-2 text-m font-semibold`}
+                                            className={`
+                                                ${active ? "bg-gray-200" : ""} 
+                                                menu-item font-semibold`}
                                             onClick={() => {setIsModalOpen(!isModalOpen); console.log("Log in clicked")}}
                                         >
                                             Sign up
@@ -126,9 +139,9 @@ function Header({placeHolder}) {
                                     {({ active }) => (
                                         <a 
                                             href=""
-                                            className={`${
-                                                active ? "bg-gray-200" : ""
-                                                } block px-4 py-2 text-m`}
+                                            className={`
+                                                ${active ? "bg-gray-200" : ""} 
+                                                menu-item`}
                                         >
                                             Log in
                                         </a>
@@ -140,9 +153,9 @@ function Header({placeHolder}) {
                                     {({ active }) => (
                                         <a 
                                             href=""
-                                            className={`${
-                                                active ? "bg-gray-200" : ""
-                                                } block px-4 py-2 text-m`}
+                                            className={`
+                                                ${active ? "bg-gray-200" : ""} 
+                                                menu-item`}
                                         >
                                             Host your home
                                         </a>
@@ -152,9 +165,9 @@ function Header({placeHolder}) {
                                     {({ active }) => (
                                         <a 
                                             href=""
-                                            className={`${
-                                                active ? "bg-gray-200" : ""
-                                                } block px-4 py-2 text-m`}
+                                            className={`
+                                                ${active ? "bg-gray-200" : ""} 
+                                                menu-item`}
                                         >
                                             Host an experience
                                         </a>
@@ -164,12 +177,41 @@ function Header({placeHolder}) {
                                     {({ active }) => (
                                         <a 
                                             href=""
-                                            className={`${
-                                                active ? "bg-gray-200" : ""
-                                                } block px-4 py-2 text-sm`}
+                                            className={`
+                                                ${session ? "hidden" : ""}
+                                                ${active ? "bg-gray-200" : ""} 
+                                                menu-item`}
                                         >
                                             Help
                                         </a>
+                                    )}
+                                </Menu.Item>
+                            </div>
+                            <div className={`${session ? "py-1" : "hidden"}`}>
+                                <Menu.Item>
+                                    {({ active }) => (
+                                        <a 
+                                            href=""
+                                            className={`
+                                                ${active ? "bg-gray-200" : ""} 
+                                                menu-item`}
+                                        >
+                                            Help
+                                        </a>
+                                    )}
+                                </Menu.Item>
+                                <Menu.Item>
+                                    {({ active }) => (
+                                        <p
+                                            href=""
+                                            className={`
+                                                ${session ? "" : "hidden"}
+                                                ${active ? "bg-gray-200" : ""} 
+                                                menu-item`}
+                                            onClick={signOut}
+                                        >
+                                            Log out
+                                        </p>
                                     )}
                                 </Menu.Item>
                             </div>
@@ -262,7 +304,7 @@ function Header({placeHolder}) {
                                 onSubmit={handleSubmit(onSubmit)}
                             >
                                 <input
-                                    className={`w-full border rounded-md p-3 pl-2 
+                                    className={`w-full border rounded-lg p-3 pl-2 
                                         ${errors.email ? "outline-none border-red-500 bg-red-50 focus:bg-white focus:border-2" : ""}`}
                                     type="text" 
                                     placeholder="Email"
@@ -278,23 +320,27 @@ function Header({placeHolder}) {
                                 </button>
                             </form>
 
-                            <div className="horizontal-line-parent border-b">
-                                <span className="bg-white px-6 text-gray-500">or</span>
+                            <div className="w-full text-center leading-[0.2rem] mt-[10px] mb-[26px] mx-0 border-b">
+                                <span className="bg-white px-6 text-gray-500">
+                                    or
+                                </span>
                             </div>
 
-                            <div className="">
-                                <div>continue with google</div>
-                            </div>
 
-                            <div className="mt-4">
-                                <button
-                                    type="button"
-                                    className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                                    onClick={() => setIsModalOpen(false)}
-                                >
-                                    Got it, thanks!
-                                </button>
-                            </div>
+                            <button className="w-full border-2 rounded-lg hover:border-black">
+                                <div className="flex w-full p-3 pl-2">
+                                    <Image 
+                                        src="/google.svg" 
+                                        width={24}
+                                        height={24}
+                                        className="flex-initial"                                
+                                        />
+                                    <p className="flex-1 text-center font-medium text-gray-600">
+                                        Continue with Google
+                                    </p>
+                                </div>
+                            </button>
+
                         </div>
                     </div>
                 </div>

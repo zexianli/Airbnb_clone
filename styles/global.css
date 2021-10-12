@@ -10,15 +10,19 @@
         cursor-pointer hover:shadow-lg active:scale-95 active:bg-gray-100
         transition duration-100 ease-out
     }
+
+    .menu-item {
+        @apply block px-4 py-2
+    }
 }
 
 @layer utilities {
-    .horizontal-line-parent {
+    /* .horizontal-line-parent {
         width: 100%; 
         text-align: center; 
         line-height: 0.2em;
         margin: 10px 0 40px; 
-    }
+    } */
 
     .continue-btn-bg {
         background-color: #dd115c;
