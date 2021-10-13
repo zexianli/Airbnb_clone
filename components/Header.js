@@ -23,8 +23,9 @@ function Header({ placeHolder }) {
     const [noOfGuests, setNoOfGuests] = useState(1);
     const router = useRouter();
     const [session, loading] = useSession();
-    const [isOpen, setIsOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const isMounted = useIsMounted();
+    const [datePickerClosed, setDatePickerClosed] = useState(true);
 
     const handleSelect = (ranges) => {
         setStartDate(ranges.selection.startDate);
@@ -83,6 +84,7 @@ function Header({ placeHolder }) {
                 <input
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
+                    onClick={() => setDatePickerClosed(false)}
                     className="pl-5 bg-transparent outline-none flex-grow text-sm text-gray-600 placeholder-gray-400"
                     type="text"
                     placeholder={placeHolder || "Start your search"}
@@ -101,7 +103,10 @@ function Header({ placeHolder }) {
 
                 <Menu as="div" className="relative inline-block text-left">
                     <div>
-                        <Menu.Button className="relative flex items-center space-x-2 border-2 p-2 rounded-full">
+                        <Menu.Button 
+                            className="relative flex items-center space-x-2 border-2 p-2 rounded-full" 
+                            onMouseDown={() => setDatePickerClosed(true)}
+                        >
                             <MenuIcon className="h-6 cursor-pointer" />
                             {session ? (
                                 <div className="h-6 ml-2">
@@ -140,7 +145,10 @@ function Header({ placeHolder }) {
                                                     className={`
                                                         ${active ? "bg-gray-200": ""} 
                                                         menu-item font-semibold`}
-                                                    onClick={() => {setIsOpen(true);}}
+                                                    onClick={() => {
+                                                        setIsModalOpen(true); 
+                                                        setDatePickerClosed(true);
+                                                    }}
                                                 >
                                                     Log In
                                                 </a>
@@ -152,7 +160,10 @@ function Header({ placeHolder }) {
                                                     className={`
                                                         ${active ? "bg-gray-200": ""} 
                                                         menu-item`}
-                                                    onClick={() => {setIsOpen(true);}}
+                                                    onClick={() => {
+                                                        setIsModalOpen(true);
+                                                        setDatePickerClosed(true);
+                                                    }}
                                                 >
                                                     Sign up
                                                 </a>
@@ -305,7 +316,7 @@ function Header({ placeHolder }) {
                 </Menu>
             </div>
 
-            {searchInput && (
+            {(searchInput && !isModalOpen && !datePickerClosed) && (
                 <div className="flex flex-col col-span-3 mx-auto mt-3">
                     <DateRangePicker
                         ranges={[selectionRange]}
@@ -353,7 +364,7 @@ function Header({ placeHolder }) {
             )}
 
             {isMounted() && (
-                <ModalPrompt isOpen={isOpen} onClose={() => setIsOpen(false)} />
+                <ModalPrompt isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
             )}
             
         </header>
