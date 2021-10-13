@@ -67,16 +67,21 @@ function Header({ placeHolder }) {
         >
             {/* Left */}
             <div
-                onClick={() => router.push("/")}
-                className="relative flex items-center h-10 cursor-pointer my-auto"
+                className="relative flex items-center h-10 my-auto"
+                draggable="false"
             >
-                <Image
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_Logo_B%C3%A9lo.svg/2560px-Airbnb_Logo_B%C3%A9lo.svg.png"
-                    layout="fill"
-                    objectFit="contain"
-                    objectPosition="left"
+                <a
+                    className="relative flex-initial cursor-pointer w-full h-full text-[0px]"
+                    onClick={() => router.push("/")}
                     href="/"
-                />
+                >Airbnb
+                    <img 
+                        src="/airbnb.svg" 
+                        alt="airbnb logo" 
+                        draggable="false" 
+                        className="h-full w-full object-contain" 
+                    />
+                </a>
             </div>
 
             {/* Middle */}
@@ -92,7 +97,7 @@ function Header({ placeHolder }) {
 
                 <SearchIcon
                     className="hidden md:inline-flex h-8 
-                bg-red-400 text-white rounded-full p-2 cursor-pointer md:mx-2"
+                bg-[#FF5A5F] text-white rounded-full p-2 cursor-pointer md:mx-2"
                 />
             </div>
 
