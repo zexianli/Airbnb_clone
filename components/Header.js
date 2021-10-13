@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { DateRangePicker } from "react-date-range";
 import { useRouter } from "next/dist/client/router";
 import { Dialog, Menu, Transition } from "@headlessui/react";
-import { singIn, signOut, useSession, signIn } from "next-auth/client";
+import { signIn, signOut, useSession } from "next-auth/client";
 
 function Header({ placeHolder }) {
     const [searchInput, setSearchInput] = useState("");
@@ -76,6 +76,7 @@ function Header({ placeHolder }) {
                     layout="fill"
                     objectFit="contain"
                     objectPosition="left"
+                    href="/"
                 />
             </div>
 
@@ -133,42 +134,89 @@ function Header({ placeHolder }) {
                             bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none"
                         >
                             <div className="py-1">
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <p
-                                            className={`
-                                                ${active ? "bg-gray-200" : ""} 
-                                                menu-item font-semibold`}
-                                            onClick={() => {
-                                                setIsModalOpen(!isModalOpen);
-                                                console.log("Log in clicked");
-                                            }}
-                                        >
-                                            Sign up
-                                        </p>
-                                    )}
-                                </Menu.Item>
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <a
-                                            href=""
-                                            className={`
-                                                ${active ? "bg-gray-200" : ""} 
-                                                menu-item`}
-                                        >
-                                            Log in
-                                        </a>
-                                    )}
-                                </Menu.Item>
+                                {!session ? (
+                                    <>
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <a
+                                                    className={`
+                                                        ${active ? "bg-gray-200": ""} 
+                                                        menu-item font-semibold`}
+                                                    onClick={() => {setIsModalOpen(!isModalOpen);}}
+                                                >
+                                                    Log In
+                                                </a>
+                                            )}
+                                        </Menu.Item>
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <a
+                                                    className={`
+                                                        ${active ? "bg-gray-200": ""} 
+                                                        menu-item`}
+                                                    onClick={() => {setIsModalOpen(!isModalOpen);}}
+                                                >
+                                                    Sign up
+                                                </a>
+                                            )}
+                                        </Menu.Item>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Menu.Item disabled>
+                                            {({ active }) => (
+                                                <a
+                                                    className={`
+                                                        ${active ? "bg-gray-200" : ""} 
+                                                        menu-item font-semibold`}
+                                                >
+                                                    Messages
+                                                </a>
+                                            )}
+                                        </Menu.Item>
+                                        <Menu.Item disabled>
+                                            {({ active }) => (
+                                                <a
+                                                    className={`
+                                                        ${active ? "bg-gray-200" : ""} 
+                                                        menu-item font-semibold`}
+                                                >
+                                                    Notifications
+                                                </a>
+                                            )}
+                                        </Menu.Item>
+                                        <Menu.Item disabled>
+                                            {({ active }) => (
+                                                <a
+                                                    className={`
+                                                        ${active ? "bg-gray-200" : ""} 
+                                                        menu-item font-semibold`}
+                                                >
+                                                    Trips
+                                                </a>
+                                            )}
+                                        </Menu.Item>
+                                        <Menu.Item disabled>
+                                            {({ active }) => (
+                                                <a
+                                                    className={`
+                                                        ${active ? "bg-gray-200" : ""} 
+                                                        menu-item font-semibold`}
+                                                >
+                                                    Wishlists
+                                                </a>
+                                            )}
+                                        </Menu.Item>
+                                    </>
+                                )}
                             </div>
                             <div className="py-1">
                                 <Menu.Item>
                                     {({ active }) => (
                                         <a
-                                            href=""
                                             className={`
                                                 ${active ? "bg-gray-200" : ""} 
-                                                menu-item`}
+                                                menu-item font-light`}
                                         >
                                             Host your home
                                         </a>
@@ -177,7 +225,6 @@ function Header({ placeHolder }) {
                                 <Menu.Item>
                                     {({ active }) => (
                                         <a
-                                            href=""
                                             className={`
                                                 ${active ? "bg-gray-200" : ""} 
                                                 menu-item`}
@@ -186,48 +233,75 @@ function Header({ placeHolder }) {
                                         </a>
                                     )}
                                 </Menu.Item>
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <a
-                                            href=""
-                                            className={`
-                                                ${session ? "hidden" : ""}
-                                                ${active ? "bg-gray-200" : ""} 
-                                                menu-item`}
-                                        >
-                                            Help
-                                        </a>
-                                    )}
-                                </Menu.Item>
+                                {!session ? (
+                                    <>
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <a
+                                                    className={`
+                                                        ${active ? "bg-gray-200" : ""} 
+                                                        menu-item`}
+                                                >
+                                                    Help
+                                                </a>
+                                            )}
+                                        </Menu.Item>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <a
+                                                    className={`
+                                                        ${active ? "bg-gray-200" : ""} 
+                                                        menu-item`}
+                                                >
+                                                    Refer a Host
+                                                </a>
+                                            )}
+                                        </Menu.Item>
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <a
+                                                    className={`
+                                                        ${active ? "bg-gray-200" : ""} 
+                                                        menu-item`}
+                                                >
+                                                    Account
+                                                </a>
+                                            )}
+                                        </Menu.Item>
+                                    </>
+                                )}
                             </div>
-                            <div className={`${session ? "py-1" : "hidden"}`}>
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <a
-                                            href=""
-                                            className={`
-                                                ${active ? "bg-gray-200" : ""} 
-                                                menu-item`}
-                                        >
-                                            Help
-                                        </a>
-                                    )}
-                                </Menu.Item>
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <p
-                                            href=""
-                                            className={`
-                                                ${session ? "" : "hidden"}
-                                                ${active ? "bg-gray-200" : ""} 
-                                                menu-item`}
-                                            onClick={signOut}
-                                        >
-                                            Log out
-                                        </p>
-                                    )}
-                                </Menu.Item>
-                            </div>
+                            {session && (
+                                <div className="py-1">
+                                    <Menu.Item>
+                                        {({ active }) => (
+                                            <a
+                                                className={`
+                                                    ${active ? "bg-gray-200" : ""} 
+                                                    menu-item`}
+                                            >
+                                                Help
+                                            </a>
+                                        )}
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        {({ active }) => (
+                                            <p
+                                                className={`
+                                                    ${session ? "" : "hidden"}
+                                                    ${active ? "bg-gray-200" : ""} 
+                                                    menu-item`}
+                                                onClick={signOut}
+                                            >
+                                                Log out
+                                            </p>
+                                        )}
+                                    </Menu.Item>
+                                </div>
+                            )}
                         </Menu.Items>
                     </Transition>
                 </Menu>
