@@ -79,7 +79,7 @@ function Header({ placeHolder }) {
                         src="/airbnb.svg" 
                         alt="airbnb logo" 
                         draggable="false" 
-                        className="h-full w-full object-contain" 
+                        className="h-full w-full object-contain object-left" 
                     />
                 </a>
             </div>
