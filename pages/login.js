@@ -1,8 +1,15 @@
 import Header from "../components/Header"
 import ModalPrompt from "../components/ModalPrompt"
 import { useSession, getSession } from "next-auth/client";
+import { useRouter } from "next/dist/client/router"
 
 export default function login() {
+    const router = useRouter();
+    const { redirect_url } = router.query;
+
+    const url = decodeURIComponent(redirect_url);
+    console.log("Login page got the redirect query: ",url);
+
     return (
         <>
             <Header showSearchBar={"hidden"} ignoreOpenModal={true} />
@@ -14,6 +21,7 @@ export default function login() {
                         hideCloseBtn={true} 
                         bgColor={"bg-white"}
                         hideShadow={true}
+                        redirectUrl={url}
                     />
                 </section>
             </main>            

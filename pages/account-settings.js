@@ -23,19 +23,20 @@ export default function accountSettings({ session }) {
 export async function getServerSideProps({ req }) {
     const session = await getSession({ req });
 
-    if (!session) {
+    console.log(session);
+    if (session) {
         return {
-            redirect: {
-                destination: "/login",
-                permanent: false,
+            props: {
+                session,
             },
-        };
+        };    
     }
 
-    console.log(session);
+    const redirect_url = encodeURIComponent("/account-settings");
     return {
-        props: {
-            session,
+        redirect: {
+            destination: `/login?redirect_url=${redirect_url}`,
+            permanent: false,
         },
     };
 }

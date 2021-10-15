@@ -4,7 +4,7 @@ import { signIn } from "next-auth/client";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 
-function ModalPrompt({ isOpen, onClose, hideCloseBtn, bgColor, hideShadow }) {
+function ModalPrompt({ isOpen, onClose, hideCloseBtn, bgColor, hideShadow, redirectUrl }) {
     const {
         register,
         handleSubmit,
@@ -93,7 +93,7 @@ function ModalPrompt({ isOpen, onClose, hideCloseBtn, bgColor, hideShadow }) {
                         </div>
 
                         <button
-                            onClick={() => signIn("google")}
+                            onClick={() => signIn("google", {callbackUrl: `${window.location.origin}${redirectUrl || "/"}`})}
                             className="w-full border-2 rounded-lg hover:border-black"
                         >
                             <div className="flex w-full p-3 pl-2">
