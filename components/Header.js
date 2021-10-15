@@ -16,7 +16,7 @@ import { signOut } from "next-auth/client";
 import { useIsMounted } from "./useIsMounted";
 import ModalPrompt from "./ModalPrompt";
 
-function Header({ placeHolder }) {
+function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
     const [searchInput, setSearchInput] = useState("");
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -76,16 +76,16 @@ function Header({ placeHolder }) {
                     href="/"
                 >Airbnb
                     <img 
-                        src="/airbnb.svg" 
-                        alt="airbnb logo" 
-                        draggable="false" 
+                        src="/airbnb.svg"
+                        alt="airbnb logo"
+                        draggable="false"
                         className="h-full w-full object-contain object-left" 
                     />
                 </a>
             </div>
 
             {/* Middle */}
-            <div className="flex items-center md:border-2 rounded-full py-2 md:shadow-sm">
+            <div className={showSearchBar || "flex items-center md:border-2 rounded-full py-2 md:shadow-sm"}>
                 <input
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
@@ -97,12 +97,12 @@ function Header({ placeHolder }) {
 
                 <SearchIcon
                     className="hidden md:inline-flex h-8 
-                bg-[#FF5A5F] text-white rounded-full p-2 cursor-pointer md:mx-2"
+                    bg-[#FF5A5F] text-white rounded-full p-2 cursor-pointer md:mx-2"
                 />
             </div>
 
             {/* Right */}
-            <div className="flex items-center space-x-4 justify-end text-gray-500 hover:cursor-pointer">
+            <div className="flex items-center space-x-4 justify-end text-gray-500 hover:cursor-pointer col-start-3">
                 <p className="hidden md:inline cursor-pointer">Become a host</p>
                 <GlobeAltIcon className="h-6 cursor-pointer" />
 
@@ -151,6 +151,7 @@ function Header({ placeHolder }) {
                                                         ${active ? "bg-gray-200": ""} 
                                                         menu-item font-semibold`}
                                                     onClick={() => {
+                                                        ignoreOpenModal ? void 0 :
                                                         setIsModalOpen(true); 
                                                         setDatePickerClosed(true);
                                                     }}
@@ -166,6 +167,7 @@ function Header({ placeHolder }) {
                                                         ${active ? "bg-gray-200": ""} 
                                                         menu-item`}
                                                     onClick={() => {
+                                                        ignoreOpenModal ? void 0 :
                                                         setIsModalOpen(true);
                                                         setDatePickerClosed(true);
                                                     }}
@@ -280,6 +282,7 @@ function Header({ placeHolder }) {
                                                     className={`
                                                         ${active ? "bg-gray-200" : ""} 
                                                         menu-item`}
+                                                    onClick={() => router.push("/account-settings")}
                                                 >
                                                     Account
                                                 </a>
@@ -308,7 +311,7 @@ function Header({ placeHolder }) {
                                                     ${session ? "" : "hidden"}
                                                     ${active ? "bg-gray-200" : ""} 
                                                     menu-item`}
-                                                onClick={signOut}
+                                                onClick={() => signOut({callbackUrl: `${window.location.origin}`})}
                                             >
                                                 Log out
                                             </p>

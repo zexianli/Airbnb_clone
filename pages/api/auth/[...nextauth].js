@@ -11,8 +11,7 @@ const options = {
             clientId: "",
             clientSecret: ""
         })
-
-    ]
+    ],
 }
 
 export default (req, res) => NextAuth(req, res, options);
