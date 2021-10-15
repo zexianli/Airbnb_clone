@@ -4,7 +4,7 @@ import { signIn } from "next-auth/client";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 
-function ModalPrompt({ isOpen, onClose }) {
+function ModalPrompt({ isOpen, onClose, hideCloseBtn, bgColor, hideShadow }) {
     const {
         register,
         handleSubmit,
@@ -23,7 +23,11 @@ function ModalPrompt({ isOpen, onClose }) {
             onClose={onClose}
         >
             <div className="min-h-screen px-4 text-center">
-                <Dialog.Overlay className="fixed inset-0 bg-black opacity-50" />
+                <Dialog.Overlay
+                    className={`fixed inset-0 ${
+                        bgColor || "bg-black opacity-50"
+                    }`}
+                />
 
                 {/* This element is to trick the browser into centering the modal contents. */}
                 <span
@@ -33,12 +37,19 @@ function ModalPrompt({ isOpen, onClose }) {
                     &#8203;
                 </span>
 
-                <div className="inline-block w-full max-w-md my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                <div
+                    className={`inline-block w-full max-w-md my-8 overflow-hidden border border-gray-400
+                                    text-left align-middle transition-all transform bg-white rounded-2xl ${
+                                        hideShadow ? "" : "shadow-xl"
+                                    }`}
+                >
                     <div className="text-lg font-medium leading-6 text-gray-900 text-center px-6 py-4 align-middle">
-                        <XIcon
-                            className="absolute h-6 w-6 m-1 p-1 hover:bg-gray-200 hover:rounded-full hover:cursor-pointer"
-                            onClick={onClose}
-                        />
+                        {!hideCloseBtn && (
+                            <XIcon
+                                className="absolute h-6 w-6 m-1 p-1 hover:bg-gray-200 hover:rounded-full hover:cursor-pointer"
+                                onClick={onClose}
+                            />
+                        )}
                         <Dialog.Title as="h3" className="">
                             Log in or sign up
                         </Dialog.Title>
