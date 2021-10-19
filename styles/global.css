@@ -14,6 +14,10 @@
     .menu-item {
         @apply block px-4 py-2 font-light
     }
+
+    .menu-item-login {
+        @apply block px-4 py-2 font-semibold hover:cursor-not-allowed
+    }
 }
 
 @layer utilities {

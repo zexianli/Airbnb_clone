@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useSession, getSession } from "next-auth/client";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export default function accountSettings({ session }) {
     return (
@@ -9,13 +10,25 @@ export default function accountSettings({ session }) {
                 <title>Account settings</title>
             </Head>
 
-            <Header />
+            <Header showSearchBar={"hidden"} />
 
-            <main>
-                <section>
-                    <h1>Authenticated</h1>
+            <main className="max-w-6xl mx-auto px-8 sm:px-16">
+                <section className="pt-10">
+                    <h1 className="text-3xl font-bold">Account</h1>
+                    <div className="flex flex-row ">
+                        <div className="text-lg font-semibold text-gray-900">
+                            {session.user.name},
+                        </div>
+                        <div className="pl-1 font-light text-lg">
+                            {session.user.email}
+                        </div>
+                    </div>
+                    
+
                 </section>
             </main>
+
+            <Footer />
         </>
     );
 }
