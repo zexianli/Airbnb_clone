@@ -63,7 +63,7 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
         <header
             className="sticky top-0 z-50 
             grid grid-cols-3 bg-white shadow-md 
-            p-5 md:px-10 lg:px-24 xl:px-96"
+            p-5 sm:px-6 md:px-8 lg:px-12 xl:px-72 h-24"
         >
             {/* Left */}
             <div
@@ -184,7 +184,7 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
                                                 <a
                                                     className={`
                                                         ${active ? "bg-gray-200" : ""} 
-                                                        menu-item font-semibold`}
+                                                        menu-item-login`}
                                                 >
                                                     Messages
                                                 </a>
@@ -195,7 +195,7 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
                                                 <a
                                                     className={`
                                                         ${active ? "bg-gray-200" : ""} 
-                                                        menu-item font-semibold`}
+                                                        menu-item-login`}
                                                 >
                                                     Notifications
                                                 </a>
@@ -206,7 +206,7 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
                                                 <a
                                                     className={`
                                                         ${active ? "bg-gray-200" : ""} 
-                                                        menu-item font-semibold`}
+                                                        menu-item-login`}
                                                 >
                                                     Trips
                                                 </a>
@@ -217,7 +217,7 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
                                                 <a
                                                     className={`
                                                         ${active ? "bg-gray-200" : ""} 
-                                                        menu-item font-semibold`}
+                                                        menu-item-login`}
                                                 >
                                                     Wishlists
                                                 </a>
@@ -232,7 +232,7 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
                                         <a
                                             className={`
                                                 ${active ? "bg-gray-200" : ""} 
-                                                menu-item font-light`}
+                                                menu-item hover:cursor-not-allowed`}
                                         >
                                             Host your home
                                         </a>
@@ -243,7 +243,7 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
                                         <a
                                             className={`
                                                 ${active ? "bg-gray-200" : ""} 
-                                                menu-item`}
+                                                menu-item hover:cursor-not-allowed`}
                                         >
                                             Host an experience
                                         </a>
@@ -256,7 +256,7 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
                                                 <a
                                                     className={`
                                                         ${active ? "bg-gray-200" : ""} 
-                                                        menu-item`}
+                                                        menu-item hover:cursor-not-allowed`}
                                                 >
                                                     Help
                                                 </a>
@@ -270,7 +270,7 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
                                                 <a
                                                     className={`
                                                         ${active ? "bg-gray-200" : ""} 
-                                                        menu-item`}
+                                                        menu-item hover:cursor-not-allowed`}
                                                 >
                                                     Refer a Host
                                                 </a>
@@ -298,7 +298,7 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
                                             <a
                                                 className={`
                                                     ${active ? "bg-gray-200" : ""} 
-                                                    menu-item`}
+                                                    menu-item hover:cursor-not-allowed`}
                                             >
                                                 Help
                                             </a>
