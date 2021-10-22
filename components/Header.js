@@ -337,7 +337,7 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
       </div>
 
       {searchInput && !isModalOpen && !datePickerClosed && (
-        <div className="flex flex-col col-span-3 mx-auto mt-3">
+        <div className="flex flex-col col-span-3 mx-auto mt-3 bg-white">
           <DateRangePicker
             ranges={[selectionRange]}
             minDate={new Date()}
@@ -349,8 +349,8 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
             direction="horizontal"
           />
 
-          <div className="flex items-center border-b mb-4">
-            <h2 className="text-2xl flex-grow font-semibold">
+          <div className="flex items-center border-b mb-2">
+            <h2 className="text-2xl flex-grow font-semibold ml-2">
               Number of Guests
             </h2>
 
@@ -365,12 +365,12 @@ function Header({ placeHolder, showSearchBar, ignoreOpenModal }) {
             />
           </div>
 
-          <div className="flex">
+          <div className="flex mb-2">
             <button onClick={resetInput} className="flex-grow text-gray-500">
               Cancel
             </button>
 
-            <button onClick={search} className="flex-grow text-red-400">
+            <button onClick={search} className="flex-grow text-red-400 mb-2">
               Search
             </button>
           </div>
