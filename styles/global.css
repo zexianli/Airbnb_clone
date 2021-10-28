@@ -1,48 +1,50 @@
-@import url("react-date-range/dist/styles.css");
-@import url("react-date-range/dist/theme/default.css");
+@import url('react-date-range/dist/styles.css');
+@import url('react-date-range/dist/theme/default.css');
 
 @tailwind components;
 @tailwind utilities;
 
 @layer components {
-    .button {
-        @apply px-4 py-2 border rounded-full 
+  .button {
+    @apply px-4 py-2 border rounded-full 
         cursor-pointer hover:shadow-lg active:scale-95 active:bg-gray-100
-        transition duration-100 ease-out
-    }
+        transition duration-100 ease-out;
+  }
 
-    .menu-item {
-        @apply block px-4 py-2 font-light
-    }
+  .menu-item {
+    @apply block px-4 py-2 font-light;
+  }
 
-    .menu-item-login {
-        @apply block px-4 py-2 font-semibold hover:cursor-not-allowed
-    }
+  .menu-item-login {
+    @apply block px-4 py-2 font-semibold hover:cursor-not-allowed;
+  }
 }
 
 @layer utilities {
-    /* .horizontal-line-parent {
+  /* .horizontal-line-parent {
         width: 100%; 
         text-align: center; 
         line-height: 0.2em;
         margin: 10px 0 40px; 
     } */
 
-    .continue-btn-bg {
-        background-color: #dd115c;
-    }
+  .continue-btn-bg {
+    background-color: #dd115c;
+  }
+
+  .no-shift-border {
+    box-shadow: 0 0 0 2px #222222;
+  }
 }
 
 .rdrDefinedRangesWrapper {
-    display: none;
+  display: none;
 }
 
 .rdrMonthPicker {
-    display: none;
+  display: none;
 }
 
 .rdrYearPicker {
-    display: none;
+  display: none;
 }
-
-

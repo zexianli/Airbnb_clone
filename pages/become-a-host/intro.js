@@ -1,6 +1,7 @@
 import { useRouter } from 'next/dist/client/router';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
+import LogoWithoutText from '../../components/LogoWithoutText';
 
 export default function intro() {
   const videoRef = useRef(null);
@@ -20,19 +21,7 @@ export default function intro() {
   return (
     <>
       {/* Logo */}
-      <div className="z-10 absolute top-0 ml-10 mt-8" draggable="false">
-        <a href="/" className="w-full h-full inline-block">
-          <img src="/airbnb-notext.svg" className="h-9 w-9" draggable="false" />
-        </a>
-      </div>
-
-      {/* Exit */}
-      {/* <button
-        onClick={() => router.push('/')}
-        className="absolute top-0 right-0 mr-12 mt-8 p-2 px-4 rounded-full text-white text-xs font-semibold bg-[#222222]"
-      >
-        Exit
-      </button> */}
+      <LogoWithoutText />
 
       <main className="flex flex-row">
         {/* Left side */}
@@ -69,21 +58,6 @@ export default function intro() {
         </div>
 
         {/* Right side */}
-        {/* <div className="flex w-6/12 relative h-screen bg-black items-center">
-          <div className="absolute bottom-0 right-0 border-t border-red-600">
-            <button className=" text-white p-6 py-3 mr-12 my-4 rounded-lg bg-[#dd115c] font-bold">
-              Let's go!
-            </button>
-          </div>
-          <div className="m-auto md:max-w-[60%] lg:max-w-[50%] text-center text-white text-5xl font-semibold">
-            Become a Host in 10 easy steps
-            <p className="text-white font-normal text-lg mt-7 w-full">
-              Join us. We'll help you every step of the way.
-            </p>
-          </div>
-        </div> */}
-
-        {/* Right side */}
         <div className="flex flex-col justify-between w-6/12 h-screen bg-black items-center">
           <div className="flex flex-row-reverse max-w-5xl w-full">
             <button
@@ -100,7 +74,10 @@ export default function intro() {
             </p>
           </div>
           <div className="flex flex-row-reverse max-w-5xl w-full border-t-2 border-[#222222]">
-            <button className=" text-white p-6 py-3 mr-12 my-4 rounded-lg bg-[#dd115c] font-bold">
+            <button
+              className=" text-white p-6 py-3 mr-12 my-4 rounded-lg bg-[#dd115c] font-bold"
+              onClick={() => router.push('/become-a-host/listing')}
+            >
               Let's go!
             </button>
           </div>
