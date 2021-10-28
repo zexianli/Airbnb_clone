@@ -7,40 +7,6 @@ import * as Yup from 'yup';
 import { TextField, Select, FormControl, InputLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const propertyTypes = [
-  {
-    num: '0',
-    type: 'Apartment',
-    pictureUrl:
-      'https://a0.muscache.com/im/pictures/eadbcbdb-d57d-44d9-9a76-665a7a4d1cd7.jpg?im_w=240',
-  },
-  {
-    num: '1',
-    type: 'House',
-    pictureUrl:
-      'https://a0.muscache.com/im/pictures/d1af74db-58eb-46bf-b3f5-e42b6c9892db.jpg?im_w=240',
-  },
-  {
-    num: '2',
-    type: 'Secondary unit',
-    pictureUrl:
-      'https://a0.muscache.com/im/pictures/32897901-1870-4895-8e23-f08dc0e61750.jpg?im_w=240',
-  },
-  {
-    num: '3',
-    type: 'Unique space',
-    pictureUrl:
-      'https://a0.muscache.com/im/pictures/7ad56bb1-ed9f-4dcb-a14c-2523da331b44.jpg?im_w=240',
-  },
-];
-
-const options2 = [
-  { num: '5', letter: 'Five' },
-  { num: '6', letter: 'Six' },
-  { num: '7', letter: 'Seve' },
-  { num: '8', letter: 'Eight' },
-];
-
 const MyTextField = styled(TextField)(() => ({
   '& .MuiFilledInput-input': {
     background: 'white',
@@ -57,7 +23,7 @@ const MyTextField = styled(TextField)(() => ({
 export default function listing() {
   const [data, setData] = useState({
     propertyType: 'Apartment',
-    privacyType: '3',
+    privacyType: 'An entire place',
     address: {
       street: '',
       zipCode: '',
@@ -74,8 +40,14 @@ export default function listing() {
   });
   const [currentStep, setCurrentStep] = useState(0);
 
-  const handleNextStep = (newData) => {
+  const handleNextStep = (newData, final = false) => {
     setData((prev) => ({ ...prev, ...newData }));
+
+    if (final) {
+      console.log('Api call: ', newData);
+      return;
+    }
+
     setCurrentStep((prev) => prev + 1);
   };
   const handlePreviousStep = (newData) => {
@@ -85,6 +57,7 @@ export default function listing() {
 
   const leftPanelText = [
     'What kind of place will you host?',
+    'What kind of space will guests have?',
     "Where's your place located?",
   ];
 
@@ -96,6 +69,12 @@ export default function listing() {
       currentStep={currentStep}
     />,
     <StepTwo
+      next={handleNextStep}
+      prev={handlePreviousStep}
+      data={data}
+      currentStep={currentStep}
+    />,
+    <StepThree
       next={handleNextStep}
       prev={handlePreviousStep}
       data={data}
@@ -131,6 +110,17 @@ export default function listing() {
   );
 }
 
+const PreviousButton = (props) => {
+  return (
+    <button
+      className="h-auto px-3 py-1 ml-9 my-6 rounded-lg hover:bg-gray-200 underline font-semibold"
+      onClick={() => props.prev(props.values)}
+    >
+      Back
+    </button>
+  );
+};
+
 const NextButton = (props) => {
   return (
     <button
@@ -145,10 +135,36 @@ const NextButton = (props) => {
 
 const StepOne = (props) => {
   const router = useRouter();
+  const propertyTypes = [
+    {
+      num: '0',
+      type: 'Apartment',
+      pictureUrl:
+        'https://a0.muscache.com/im/pictures/eadbcbdb-d57d-44d9-9a76-665a7a4d1cd7.jpg?im_w=240',
+    },
+    {
+      num: '1',
+      type: 'House',
+      pictureUrl:
+        'https://a0.muscache.com/im/pictures/d1af74db-58eb-46bf-b3f5-e42b6c9892db.jpg?im_w=240',
+    },
+    {
+      num: '2',
+      type: 'Secondary unit',
+      pictureUrl:
+        'https://a0.muscache.com/im/pictures/32897901-1870-4895-8e23-f08dc0e61750.jpg?im_w=240',
+    },
+    {
+      num: '3',
+      type: 'Unique space',
+      pictureUrl:
+        'https://a0.muscache.com/im/pictures/7ad56bb1-ed9f-4dcb-a14c-2523da331b44.jpg?im_w=240',
+    },
+  ];
   const [curSelected, setCurSelected] = useState(props.data.propertyType);
 
   const myHandleSubmit = (values) => {
-    console.log('Inside handleSubmit and the values are: ', values);
+    console.log('Page one: ', values);
     props.next(values);
   };
 
@@ -164,35 +180,6 @@ const StepOne = (props) => {
           <Form className="w-10/12 max-w-2xl h-full">
             <div className="flex flex-col h-full m-auto">
               <div className="grid grid-cols-1 my-auto mx-8">
-                {/* {propertyTypes.map((v, i) => (
-                  <div
-                    key={i}
-                    className={`flex flex-row justify-between align-middle ${
-                      curSelected === i
-                        ? 'bg-gray-100 border-2 border-black'
-                        : ''
-                    } mb-2 pl-4 py-4 text-xl font-semibold border rounded-lg hover:border-black`}
-                    onClick={() => setCurSelected(i)}
-                  >
-                    <label className="my-auto">
-                      {v.type}
-                      <Field
-                        type="radio"
-                        className="hidden"
-                        name="propertyType"
-                        value={v.type}
-                      />
-                    </label>
-                    <div className="flex justify-center pr-4">
-                      <Image
-                        src={v.pictureUrl}
-                        width={48}
-                        height={48}
-                        objectFit="fill"
-                      />
-                    </div>
-                  </div>
-                ))} */}
                 {propertyTypes.map((v, i) => (
                   <Field
                     as="button"
@@ -209,10 +196,7 @@ const StepOne = (props) => {
                       values.propertyType = v.type;
                     }}
                   >
-                    <label className="my-auto">
-                      {v.type}
-                      {/* <Field type="radio" name="propertyType" value={v.type} /> */}
-                    </label>
+                    <label className="my-auto">{v.type}</label>
 
                     <div className="flex justify-center pr-4">
                       <Image
@@ -245,6 +229,65 @@ const StepOne = (props) => {
   );
 };
 
+const StepTwo = (props) => {
+  const privacyTypes = [
+    { type: 'An entire place' },
+    { type: 'A private room' },
+    { type: 'A shared room' },
+  ];
+  const [curSelected, setCurSelected] = useState(props.data.privacyType);
+
+  const myHandleSubmit = (values) => {
+    console.log('Page two: ', values);
+    props.next(values);
+  };
+
+  return (
+    <Formik
+      initialValues={props.data}
+      onSubmit={(values) => {
+        myHandleSubmit(values);
+      }}
+    >
+      {({ values, handleSubmit }) => (
+        <>
+          <Form className="w-10/12 max-w-2xl h-full">
+            <div className="flex flex-col h-full m-auto">
+              <div className="grid grid-cols-1 my-auto mx-8">
+                {privacyTypes.map((v, i) => (
+                  <Field
+                    as="button"
+                    key={i}
+                    name="privacyType"
+                    className={`flex flex-row justify-between align-middle mb-2 pl-4 py-8 text-xl font-semibold border rounded-lg hover:no-shift-border ${
+                      curSelected === v.type
+                        ? 'bg-gray-100 no-shift-border'
+                        : ''
+                    } `}
+                    type="button"
+                    onClick={() => {
+                      setCurSelected(v.type);
+                      values.privacyType = v.type;
+                    }}
+                  >
+                    <label className="my-auto">{v.type}</label>
+                  </Field>
+                ))}
+              </div>
+            </div>
+          </Form>
+
+          <div className="flex flex-row justify-between max-w-5xl w-full border-t-2 border-[#222222]">
+            <PreviousButton prev={props.prev} values={values} />
+
+            <NextButton next={handleSubmit} />
+          </div>
+        </>
+      )}
+    </Formik>
+  );
+};
+
 const addressSchema = Yup.object({
   address: Yup.object({
     street: Yup.string().min(4, 'Too short').required('Required'),
@@ -257,10 +300,10 @@ const addressSchema = Yup.object({
   }),
 });
 
-const StepTwo = (props) => {
+const StepThree = (props) => {
   const myHandleSubmit = (values) => {
-    console.log('this should be an API call', values);
-    // props.next(values)
+    console.log('Page three');
+    props.next(values, true);
   };
 
   return (
@@ -268,7 +311,6 @@ const StepTwo = (props) => {
       initialValues={props.data}
       validationSchema={addressSchema}
       onSubmit={(values) => {
-        console.log('onSubmit called');
         myHandleSubmit(values);
       }}
     >
@@ -314,7 +356,6 @@ const StepTwo = (props) => {
                   </div>
                 ) : null}
 
-                {/* <div className="grid grid-flow-col grid-cols-2 auto-rows-auto"> */}
                 <div className="flex flex-row flex-wrap">
                   <Field
                     as={MyTextField}
@@ -369,20 +410,9 @@ const StepTwo = (props) => {
             </div>
           </div>
           <div className="flex flex-row justify-between max-w-5xl w-full border-t-2 border-[#222222]">
-            <button
-              className="h-auto px-3 py-1 ml-9 my-6 rounded-lg hover:bg-gray-200 underline font-semibold"
-              onClick={() => props.prev(values)}
-            >
-              Back
-            </button>
-            {/* <NextButton next={handleSubmit} /> */}
-            <button
-              className="text-white p-6 py-3 mr-12 my-4 rounded-lg bg-black bg-opacity-80 font-semibold"
-              type="submit"
-              onClick={handleSubmit}
-            >
-              Next
-            </button>
+            <PreviousButton prev={props.prev} values={values} />
+
+            <NextButton next={handleSubmit} />
           </div>
         </>
       )}
