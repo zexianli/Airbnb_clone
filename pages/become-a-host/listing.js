@@ -6,6 +6,7 @@ import Image from 'next/image';
 import * as Yup from 'yup';
 import { TextField, Select, FormControl, InputLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { PlusIcon, MinusIcon } from '@heroicons/react/solid';
 
 const MyTextField = styled(TextField)(() => ({
   '& .MuiFilledInput-input': {
@@ -31,14 +32,14 @@ export default function listing() {
       state: '',
     },
     floorPlan: {
-      guests: '0',
-      beds: '0',
-      bedrooms: '0',
-      bathrooms: '0',
+      guests: 1,
+      beds: 1,
+      bedrooms: 1,
+      bathrooms: 1,
     },
     amenities: [],
   });
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(3);
 
   const handleNextStep = (newData, final = false) => {
     setData((prev) => ({ ...prev, ...newData }));
@@ -59,6 +60,7 @@ export default function listing() {
     'What kind of place will you host?',
     'What kind of space will guests have?',
     "Where's your place located?",
+    'How many guests would you like to welcome?',
   ];
 
   const steps = [
@@ -75,6 +77,12 @@ export default function listing() {
       currentStep={currentStep}
     />,
     <StepThree
+      next={handleNextStep}
+      prev={handlePreviousStep}
+      data={data}
+      currentStep={currentStep}
+    />,
+    <StepFour
       next={handleNextStep}
       prev={handlePreviousStep}
       data={data}
@@ -302,8 +310,8 @@ const addressSchema = Yup.object({
 
 const StepThree = (props) => {
   const myHandleSubmit = (values) => {
-    console.log('Page three');
-    props.next(values, true);
+    console.log('Page three', values);
+    props.next(values);
   };
 
   return (
@@ -409,6 +417,155 @@ const StepThree = (props) => {
               </span>
             </div>
           </div>
+          <div className="flex flex-row justify-between max-w-5xl w-full border-t-2 border-[#222222]">
+            <PreviousButton prev={props.prev} values={values} />
+
+            <NextButton next={handleSubmit} />
+          </div>
+        </>
+      )}
+    </Formik>
+  );
+};
+
+const Controls = (props) => {
+  return (
+    <div className="flex flex-row items-center justify-evenly">
+      <button
+        type="button"
+        disabled={props.value === props.min ? true : false}
+        onClick={() => {
+          props.dec();
+          props.data.floorPlan[props.bind] -= props.step;
+        }}
+      >
+        <MinusIcon
+          width={32}
+          height={32}
+          className={`border rounded-full mx-4 p-2 border-gray-500 text-gray-500 ${
+            props.value === props.min
+              ? 'bg-gray-50 border-gray-100 text-gray-300'
+              : ''
+          }`}
+        />
+      </button>
+      <Field
+        as="div"
+        name="floorPlan.guests"
+        className="text-base font-normal w-4 text-center"
+      >
+        {props.value}
+      </Field>
+      <button
+        type="button"
+        disabled={props.value === props.max ? true : false}
+        onClick={() => {
+          props.inc();
+          props.data.floorPlan[props.bind] += props.step;
+        }}
+      >
+        <PlusIcon
+          width={32}
+          height={32}
+          className={`border rounded-full ml-4 p-2 border-gray-500 text-gray-500 ${
+            props.value === props.max
+              ? 'bg-gray-50 border-gray-100 text-gray-300'
+              : ''
+          }`}
+        />
+      </button>
+    </div>
+  );
+};
+
+const StepFour = (props) => {
+  const [noOfGuests, setNoOfGuests] = useState(props.data.floorPlan.guests);
+  const [noOfBeds, setNoOfBeds] = useState(props.data.floorPlan.beds);
+  const [noOfBedRooms, setNoOfBedRooms] = useState(
+    props.data.floorPlan.bedrooms
+  );
+  const [noOfBathRooms, setNoOfBathRooms] = useState(
+    props.data.floorPlan.bathrooms
+  );
+
+  const myHandleSubmit = (values) => {
+    console.log('Page four: ', values);
+    props.next(values, true);
+  };
+
+  return (
+    <Formik
+      initialValues={props.data}
+      onSubmit={(values) => {
+        myHandleSubmit(values);
+      }}
+    >
+      {({ values, handleSubmit }) => (
+        <>
+          <Form className="w-10/12 max-w-xl h-full">
+            <div className="flex flex-col h-full m-auto">
+              <div className="grid grid-cols-1 my-auto mx-8 text-2xl font-semibold">
+                <div className="flex flex-row justify-between my-4">
+                  <label>Guests</label>
+                  <Controls
+                    value={noOfGuests}
+                    step={1}
+                    bind="guests"
+                    data={values}
+                    min={1}
+                    max={16}
+                    dec={() => setNoOfGuests((prev) => prev - 1)}
+                    inc={() => setNoOfGuests((prev) => prev + 1)}
+                  />
+                </div>
+
+                <div className="flex flex-row justify-between my-4">
+                  <label>Beds</label>
+                  <Controls
+                    value={noOfBeds}
+                    step={1}
+                    bind="beds"
+                    data={values}
+                    min={1}
+                    max={16}
+                    dec={() => setNoOfBeds((prev) => prev - 1)}
+                    inc={() => setNoOfBeds((prev) => prev + 1)}
+                  />
+                </div>
+
+                {values.privacyType !== 'A shared room' ? (
+                  <div className="flex flex-row justify-between my-4">
+                    <label>Bedrooms</label>
+                    <Controls
+                      value={noOfBedRooms}
+                      step={1}
+                      bind="bedrooms"
+                      data={values}
+                      min={1}
+                      max={16}
+                      dec={() => setNoOfBedRooms((prev) => prev - 1)}
+                      inc={() => setNoOfBedRooms((prev) => prev + 1)}
+                    />
+                  </div>
+                ) : null}
+
+                <div className="flex flex-row justify-between my-4">
+                  <label>Bathrooms</label>
+                  <Controls
+                    value={noOfBathRooms}
+                    step={0.5}
+                    bind="bathrooms"
+                    data={values}
+                    min={0.5}
+                    max={16}
+                    dec={() => setNoOfBathRooms((prev) => prev - 0.5)}
+                    inc={() => setNoOfBathRooms((prev) => prev + 0.5)}
+                  />
+                </div>
+              </div>
+            </div>
+          </Form>
+
           <div className="flex flex-row justify-between max-w-5xl w-full border-t-2 border-[#222222]">
             <PreviousButton prev={props.prev} values={values} />
 
