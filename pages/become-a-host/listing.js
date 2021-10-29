@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import LogoWithoutText from '../../components/LogoWithoutText';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { useState } from 'react';
@@ -39,7 +40,7 @@ export default function listing() {
     },
     amenities: [],
   });
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(4);
 
   const handleNextStep = (newData, final = false) => {
     setData((prev) => ({ ...prev, ...newData }));
@@ -61,6 +62,7 @@ export default function listing() {
     'What kind of space will guests have?',
     "Where's your place located?",
     'How many guests would you like to welcome?',
+    'Let guests know what your place has to offer',
   ];
 
   const steps = [
@@ -88,17 +90,28 @@ export default function listing() {
       data={data}
       currentStep={currentStep}
     />,
+    <StepFive
+      next={handleNextStep}
+      prev={handlePreviousStep}
+      data={data}
+      currentStep={currentStep}
+    />,
   ];
 
   return (
     <>
+      <Head>
+        <title>Enter listing details - Airbnb</title>
+        <link rel="icon" href="/airbnb-notext-red.svg" />
+      </Head>
+
       {/* Logo */}
       <LogoWithoutText />
 
       <main className="flex flex-row h-screen">
         {/* Left side */}
         <div className="relative w-6/12 bg-gradient-to-t from-purple-900 to-pink-600">
-          <div className="absolute top-[45%] max-w-[80%] ml-14 text-white text-5xl font-semibold">
+          <div className="absolute top-[45%] max-w-[70%] ml-14 text-white text-5xl font-semibold">
             {leftPanelText[currentStep]}
           </div>
         </div>
@@ -490,7 +503,7 @@ const StepFour = (props) => {
 
   const myHandleSubmit = (values) => {
     console.log('Page four: ', values);
-    props.next(values, true);
+    props.next(values);
   };
 
   return (
@@ -561,6 +574,84 @@ const StepFour = (props) => {
                     dec={() => setNoOfBathRooms((prev) => prev - 0.5)}
                     inc={() => setNoOfBathRooms((prev) => prev + 0.5)}
                   />
+                </div>
+              </div>
+            </div>
+          </Form>
+
+          <div className="flex flex-row justify-between max-w-5xl w-full border-t-2 border-[#222222]">
+            <PreviousButton prev={props.prev} values={values} />
+
+            <NextButton next={handleSubmit} />
+          </div>
+        </>
+      )}
+    </Formik>
+  );
+};
+
+const StepFive = (props) => {
+  const myHandleSubmit = (values) => {
+    console.log('Page five: ', values);
+    props.next(values, true);
+  };
+
+  const standOutAmenities = [
+    { type: 'Pool', svg: '/add-a-listing/pool.svg' },
+    { type: 'Hot tub', svg: '/add-a-listing/hot-tub.svg' },
+    { type: 'Patio', svg: '/add-a-listing/patio.svg' },
+    { type: 'BBQ grill', svg: '/add-a-listing/grill.svg' },
+    { type: 'Fire pit', svg: '/add-a-listing/firepit.svg' },
+    { type: 'Pool table', svg: '/add-a-listing/pool-table.svg' },
+    { type: 'Indoor fireplace', svg: '/add-a-listing/fireplace.svg' },
+    { type: 'Outdoor dining area', svg: '/add-a-listing/outdoor.svg' },
+    {
+      type: 'Excercise equipment',
+      svg: '/add-a-listing/exercise-equipment.svg',
+    },
+  ];
+
+  return (
+    <Formik
+      initialValues={props.data}
+      onSubmit={(values) => {
+        myHandleSubmit(values);
+      }}
+    >
+      {({ values, handleSubmit }) => (
+        <>
+          <Form className="w-10/12 max-w-xl h-full">
+            <div className="flex flex-col h-full m-auto">
+              <div className="mt-10">
+                <h2 className="w-full text-2xl font-semibold">
+                  Do you have any standout amenities?
+                </h2>
+                <div className="flex flex-row flex-wrap justify-between mt-6">
+                  {standOutAmenities.map((item, idx) => (
+                    <label
+                      key={idx}
+                      className="mb-3 min-h-[68px]
+                       w-[30%] rounded-md hover:no-shift-border"
+                    >
+                      <Field
+                        className="peer hidden"
+                        type="checkbox"
+                        name="amenities"
+                        value={item.type}
+                      />
+                      <div
+                        className="flex flex-col justify-center items-center w-full h-full border rounded-md 
+                        border-gray-300 pt-7 pb-7 px-2 peer-checked:no-shift-border peer-checked:bg-gray-50"
+                      >
+                        <div className="flex flex-col justify-center items-center h-14">
+                          <Image src={item.svg} width={32} height={32} />
+                        </div>
+                        <span className="text-center w-10/12 h-12">
+                          {item.type}
+                        </span>
+                      </div>
+                    </label>
+                  ))}
                 </div>
               </div>
             </div>
