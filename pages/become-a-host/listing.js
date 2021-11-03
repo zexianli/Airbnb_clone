@@ -8,6 +8,8 @@ import * as Yup from 'yup';
 import { TextField, Select, FormControl, InputLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { PlusIcon, MinusIcon } from '@heroicons/react/solid';
+import client from '../../utils/apollo-client';
+import { gql, useMutation } from '@apollo/client';
 
 const MyTextField = styled(TextField)(() => ({
   '& .MuiFilledInput-input': {
@@ -23,7 +25,7 @@ const MyTextField = styled(TextField)(() => ({
 }));
 
 export default function listing() {
-  const [data, setData] = useState({
+  const [listingData, setListingData] = useState({
     propertyType: 'Apartment',
     privacyType: 'An entire place',
     address: {
@@ -39,21 +41,38 @@ export default function listing() {
       bathrooms: 1,
     },
     amenities: [],
+    pricePerDay: 0,
+    pictureUrls: ['test'],
   });
-  const [currentStep, setCurrentStep] = useState(4);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const ADD_LODGING = gql`
+    mutation CreateLodgingMutation($input: CreateLodgingInput) {
+      createLodging(input: $input) {
+        _id
+      }
+    }
+  `;
+
+  const router = useRouter();
+
+  const [addLodging, { data, loading, error }] = useMutation(ADD_LODGING, {
+    client,
+  });
 
   const handleNextStep = (newData, final = false) => {
-    setData((prev) => ({ ...prev, ...newData }));
+    setListingData((prev) => ({ ...prev, ...newData }));
 
     if (final) {
-      console.log('Api call: ', newData);
+      addLodging({ variables: { input: newData } });
+      router.push('/');
       return;
     }
 
     setCurrentStep((prev) => prev + 1);
   };
   const handlePreviousStep = (newData) => {
-    setData((prev) => ({ ...prev, ...newData }));
+    setListingData((prev) => ({ ...prev, ...newData }));
     setCurrentStep((prev) => prev - 1);
   };
 
@@ -63,37 +82,44 @@ export default function listing() {
     "Where's your place located?",
     'How many guests would you like to welcome?',
     'Let guests know what your place has to offer',
+    'Extra details',
   ];
 
   const steps = [
     <StepOne
       next={handleNextStep}
       prev={handlePreviousStep}
-      data={data}
+      data={listingData}
       currentStep={currentStep}
     />,
     <StepTwo
       next={handleNextStep}
       prev={handlePreviousStep}
-      data={data}
+      data={listingData}
       currentStep={currentStep}
     />,
     <StepThree
       next={handleNextStep}
       prev={handlePreviousStep}
-      data={data}
+      data={listingData}
       currentStep={currentStep}
     />,
     <StepFour
       next={handleNextStep}
       prev={handlePreviousStep}
-      data={data}
+      data={listingData}
       currentStep={currentStep}
     />,
     <StepFive
       next={handleNextStep}
       prev={handlePreviousStep}
-      data={data}
+      data={listingData}
+      currentStep={currentStep}
+    />,
+    <StepSix
+      next={handleNextStep}
+      prev={handlePreviousStep}
+      data={listingData}
       currentStep={currentStep}
     />,
   ];
@@ -185,7 +211,6 @@ const StepOne = (props) => {
   const [curSelected, setCurSelected] = useState(props.data.propertyType);
 
   const myHandleSubmit = (values) => {
-    console.log('Page one: ', values);
     props.next(values);
   };
 
@@ -259,7 +284,6 @@ const StepTwo = (props) => {
   const [curSelected, setCurSelected] = useState(props.data.privacyType);
 
   const myHandleSubmit = (values) => {
-    console.log('Page two: ', values);
     props.next(values);
   };
 
@@ -323,7 +347,6 @@ const addressSchema = Yup.object({
 
 const StepThree = (props) => {
   const myHandleSubmit = (values) => {
-    console.log('Page three', values);
     props.next(values);
   };
 
@@ -502,7 +525,6 @@ const StepFour = (props) => {
   );
 
   const myHandleSubmit = (values) => {
-    console.log('Page four: ', values);
     props.next(values);
   };
 
@@ -592,8 +614,7 @@ const StepFour = (props) => {
 
 const StepFive = (props) => {
   const myHandleSubmit = (values) => {
-    console.log('Page five: ', values);
-    props.next(values, true);
+    props.next(values);
   };
 
   const standOutAmenities = [
@@ -652,6 +673,62 @@ const StepFive = (props) => {
                       </div>
                     </label>
                   ))}
+                </div>
+              </div>
+            </div>
+          </Form>
+
+          <div className="flex flex-row justify-between max-w-5xl w-full border-t-2 border-[#222222]">
+            <PreviousButton prev={props.prev} values={values} />
+
+            <NextButton next={handleSubmit} />
+          </div>
+        </>
+      )}
+    </Formik>
+  );
+};
+
+const StepSix = (props) => {
+  const myHandleSubmit = (values) => {
+    props.next(values, true);
+  };
+
+  return (
+    <Formik
+      initialValues={props.data}
+      onSubmit={(values) => {
+        myHandleSubmit(values);
+      }}
+    >
+      {({ values, handleSubmit }) => (
+        <>
+          <Form className="w-10/12 max-w-xl h-full">
+            <div className="flex flex-col h-full m-auto">
+              <div className="mt-10">
+                <h2 className="w-full text-2xl font-semibold">
+                  Input extra details
+                </h2>
+                <div>
+                  <label>
+                    Price per day
+                    <Field
+                      type="number"
+                      className="ml-2"
+                      name="pricePerDay"
+                      placeholder="Price per day"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    Url of picture
+                    <Field
+                      className="ml-2"
+                      name="pictureUrls[0]"
+                      placeholder="Url of picture"
+                    />
+                  </label>
                 </div>
               </div>
             </div>
