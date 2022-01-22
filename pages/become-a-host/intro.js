@@ -1,5 +1,4 @@
 import { useRouter } from 'next/dist/client/router';
-import Image from 'next/image';
 import { useRef, useState } from 'react';
 import LogoWithoutText from '../../components/LogoWithoutText';
 
